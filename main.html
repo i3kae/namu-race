@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <title>크롬 확장 프로그램</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: "Noto Sans KR", sans-serif;
+        background-color: #f0f2f5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 200px;
+        width: 300px; /* 확장 프로그램 팝업의 크기 예시 */
+      }
+
+      .container {
+        background-color: #ffffff;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 80%;
+        max-width: 260px; /* 컨테이너 너비 조절 */
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+        color: #333;
+      }
+
+      .btn-group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      /* 공통 버튼 스타일 */
+      button {
+        background: linear-gradient(135deg, #6e8ae6, #5ba8f5);
+        border: none;
+        border-radius: 12px; /* 둥글면서도 약간 각진 느낌 유지 */
+        color: #fff;
+        font-size: 1rem;
+        padding: 12px 0;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+      }
+
+      button:hover {
+        background: linear-gradient(135deg, #5ba8f5, #6e8ae6);
+        transform: translateY(-2px);
+      }
+
+      button:active {
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>재생 옵션</h1>
+      <div class="btn-group">
+        <button id="randomBtn">무작위</button>
+        <button id="choiceBtn">선택</button>
+      </div>
+      <script src="scripts/main.js"></script>
+    </div>
+  </body>
+</html>

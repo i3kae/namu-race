@@ -1,0 +1,10 @@
+{
+  "name": "namu race",
+  "description": "namu wiki race game",
+  "version": "0.1",
+  "manifest_version": 3,
+  "action": {
+    "default_popup": "main.html",
+    "default_icon": "images/icon.png"
+  }
+}
