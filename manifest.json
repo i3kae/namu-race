@@ -6,5 +6,12 @@
   "action": {
     "default_popup": "main.html",
     "default_icon": "images/icon.png"
-  }
+  },
+  "permissions": ["tabs"],
+  "content_scripts": [
+    {
+      "matches": ["https://namu.wiki/w/*"],
+      "js": ["src/gamePlay.js"]
+    }
+  ]
 }
