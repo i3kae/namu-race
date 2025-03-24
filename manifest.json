@@ -3,15 +3,18 @@
   "description": "namu wiki race game",
   "version": "0.1",
   "manifest_version": 3,
+  "permissions": ["tabs", "sidePanel", "scripting", "webNavigation", "storage"],
+  "background": {
+    "service_worker": "src/background.js"
+  },
   "action": {
-    "default_popup": "main.html",
     "default_icon": "images/icon.png"
   },
-  "permissions": ["tabs"],
   "content_scripts": [
     {
       "matches": ["https://namu.wiki/w/*"],
-      "js": ["src/gamePlay.js"]
+      "js": ["src/moveChecker.js"],
+      "run_at": "document_end"
     }
   ]
 }

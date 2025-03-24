@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Namu Wiki Race</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: "Noto Sans KR", sans-serif;
+      background-color: #fff;
+      text-align: left;
+    }
+
+    /* 최상단 영역 (초기에는 숨김) */
+    #topBanner {
+      display: none;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px;
+      background-color: #eee;
+      border-bottom: 1px solid #ccc;
+      align-items: center;
+      gap: 8px;
+    }
+
+    #topBanner .gameInfo {
+      font-weight: bold;
+      margin-right: 12px;
+    }
+
+    #endGameBtn {
+      background: #f44336;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      display: none;
+    }
+
+    #endGameBtn:hover {
+      background: #e53935;
+    }
+
+    h1 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    button {
+      background: linear-gradient(135deg, #6e8ae6, #5ba8f5);
+      border: none;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 1rem;
+      font-weight: bold;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+      white-space: nowrap;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #5ba8f5, #6e8ae6);
+      transform: translateY(-2px);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    #visitedHeader {
+      display: none;
+      margin-top: 16px;
+      text-align: left;
+    }
+
+    #visitedPaths {
+      list-style: none;
+      padding-left: 0;
+      margin-top: 8px;
+      display: none;
+    }
+
+    #visitedPaths li {
+      margin-bottom: 6px;
+    }
+
+    #visitedPaths button {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #777, #999);
+      color: #fff;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      visibility: hidden;
+      opacity: 0;
+      transition: visibility 0s, opacity 0.5s;
+      z-index: 999;
+    }
+
+    /* 오버레이 내 문서 표시 영역 */
+    #displayContainer {
+      width: 90%;
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      color: #fff;
+      font-size: 1.5rem;
+    }
+
+    .display-line {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #444;
+      margin: 4px 0;
+      border-radius: 4px;
+      background-color: #333;
+    }
+
+    .display-static {
+      margin: 4px 0;
+      font-weight: bold;
+    }
+
+    #animationText {
+      margin-top: 12px;
+      font-size: 1.2rem;
+      color: #fff;
+      text-align: center;
+    }
+
+    /* 선택 모드용 모달 창 */
+    #choiceModal {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    #choiceModal h2 {
+      margin-top: 0;
+      color: #333;
+    }
+
+    #choiceModal .form-group {
+      margin-bottom: 15px;
+    }
+
+    #choiceModal label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    #choiceModal input[type="text"] {
+      width: 95%;
+      padding: 8px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    #choiceModal .form-buttons {
+      text-align: right;
+    }
+
+    #choiceModal .modal-btn {
+      background: linear-gradient(135deg, #6e8ae6, #5ba8f5);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      font-size: 1rem;
+      padding: 8px 12px;
+      cursor: pointer;
+      margin-left: 8px;
+      transition: background 0.3s, transform 0.2s;
+    }
+
+    #choiceModal .modal-btn:hover {
+      background: linear-gradient(135deg, #5ba8f5, #6e8ae6);
+      transform: translateY(-2px);
+    }
+
+    #choiceModal .modal-btn.cancel {
+      background: #f44336;
+    }
+
+    #choiceModal .modal-btn.cancel:hover {
+      background: #e53935;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 최상단 영역 -->
+  <div id="topBanner">
+    <span class="gameInfo"></span>
+    <button id="endGameBtn">게임 종료</button>
+  </div>
+
+  <h1>Namu Race</h1>
+  <div class="btn-group" id="btnGroup">
+    <button id="randomBtn">랜덤 모드</button>
+    <button id="choiceBtn">선택 모드</button>
+    <button id="howToPlayBtn">어떻게 플레이 하나요?</button>
+  </div>
+
+  <!-- 방문 기록 헤더 및 리스트 -->
+  <h2 id="visitedHeader">방문 기록</h2>
+  <ul id="visitedPaths"></ul>
+
+  <!-- 오버레이: 시작 및 도착 문서를 보여주는 영역 -->
+  <div id="overlay">
+    <div id="displayContainer">
+      <div id="displayA" class="display-line"></div>
+      <div class="display-static">부터</div>
+      <div id="displayB" class="display-line"></div>
+      <div class="display-static">까지!</div>
+    </div>
+    <div id="animationText"></div>
+  </div>
+
+  <div id="choiceModal">
+    <h2>문서 선택</h2>
+    <form id="choiceForm">
+      <div class="form-group">
+        <label for="startInput">시작 문서:</label>
+        <input type="text" id="startInput" name="start" required>
+      </div>
+      <div class="form-group">
+        <label for="destInput">도착 문서:</label>
+        <input type="text" id="destInput" name="destination" required>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="modal-btn">게임 시작</button>
+        <button type="button" id="choiceCloseBtn" class="modal-btn cancel">취소</button>
+      </div>
+    </form>
+  </div>
+
+
+  <script src="../src/main.js"></script>
+</body>
+
+</html>
